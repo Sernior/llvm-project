@@ -1,0 +1,26 @@
+## COMANDI
+
+## TEST
+
+FROM MAIN FOLDER:
+$ build/bin/llvm-lit -sv libcxx/test/libcxx/containers/unord/fedetest.pass.cpp
+
+
+
+##Reference:
+https://libcxx.llvm.org/
+
+##Building using lib++
+clang++ -O3 -nostdinc++ -nostdlib++ -I/usr/local/include/c++/v1 -L /usr/local/lib -Wl,-rpath,/usr/local/lib -lc++ main.cpp -o main #for release
+clang++ -g -nostdinc++ -nostdlib++ -I/usr/local/include/c++/v1 -L /usr/local/lib -Wl,-rpath,/usr/local/lib -lc++ main.cpp -o main #for debug
+
+##Create a sim link (if needed) in:
+/usr/lib/local/lib/python3.11/dist-packages/lldb -> /usr/lib/llvm-14/lib/python3.11/dist-packages/lldb
+
+##Remove lldb ignore regex settings from launch.json:
+            "initCommands": ["settings set target.process.thread.step-avoid-regexp = ''"],
+
+##TO BUILD:
+cmake -G Ninja -S runtimes -B build -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind"
+ninja -C build cxx cxxabi unwind
+sudo ninja -C build install-cxx install-cxxabi install-unwind
